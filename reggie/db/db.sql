@@ -1,17 +1,27 @@
 -- Patch script for existing reggie schema.
--- It is safe to run even when table `employee` does not exist yet.
+-- Safe for fresh databases and older MySQL variants.
+
+SET @db_name := IFNULL(DATABASE(), 'reggie');
 
 SET @table_exists := (
   SELECT COUNT(*)
   FROM information_schema.tables
-  WHERE table_schema = DATABASE()
+  WHERE table_schema = @db_name
     AND table_name = 'employee'
 );
 
+SET @column_exists := (
+  SELECT COUNT(*)
+  FROM information_schema.columns
+  WHERE table_schema = @db_name
+    AND table_name = 'employee'
+    AND column_name = 'type'
+);
+
 SET @ddl := IF(
-  @table_exists = 1,
-  'ALTER TABLE employee ADD COLUMN IF NOT EXISTS type INT DEFAULT 0',
-  'SELECT "skip: table employee does not exist, please import full schema first" AS msg'
+  @table_exists = 1 AND @column_exists = 0,
+  'ALTER TABLE employee ADD COLUMN type INT DEFAULT 0',
+  'SELECT "skip: employee missing or type column already exists" AS msg'
 );
 PREPARE stmt FROM @ddl;
 EXECUTE stmt;
