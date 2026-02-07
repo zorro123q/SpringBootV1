@@ -171,14 +171,15 @@ SpringBootV1/
 CREATE DATABASE reggie DEFAULT CHARACTER SET utf8mb4;
 ```
 
-2. 导入你的完整建表与初始化数据脚本（本仓库仅附带补丁脚本 `reggie/db/db.sql`）。
-3. 执行补丁脚本：
+2. **先导入完整建表与初始化数据脚本**（本仓库中的 `reggie/db/db.sql` 只是补丁，不是完整建表脚本）。
+3. 再执行补丁脚本（建议使用绝对路径）：
 
 ```sql
-source reggie/db/db.sql;
+source /workspace/SpringBootV1/reggie/db/db.sql;
 ```
 
-> `db.sql` 当前内容是为 `employee` 表新增 `type` 字段并更新一条数据。
+> 如果你看到 `ERROR 1146 (42S02): Table 'reggie.employee' doesn't exist`，表示当前数据库还没有导入完整表结构。
+> 新版 `db.sql` 已做了存在性判断：当 `employee` 表不存在时会输出 skip 提示，不再硬报错。
 
 ---
 
