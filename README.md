@@ -236,8 +236,8 @@ java -jar reggie/target/reggie-*.jar
 默认端口 `8080`：
 
 - 管理端：`http://localhost:8080/backend/index.html`
-- 用户端：`http://localhost:8080/front/index.html`
-- 登录页：`http://localhost:8080/backend/page/login/login.html`
+- 用户端：`http://localhost:8080/front/page/login.html`
+
 
 ---
 
